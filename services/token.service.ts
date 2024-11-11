@@ -1,3 +1,4 @@
+
 export class TokenService {
 	constructor(
 		private readonly _accessTokenName = 'app:token:access',
