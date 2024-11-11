@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify','ToastPlugin'],
   },
+
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
@@ -14,6 +15,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     //...
   ],
+
   vite: {
     vue: {
       template: {
@@ -21,7 +23,10 @@ export default defineNuxtConfig({
       },
     },
   },
+
   devServer:{
     port:3001
-  }
+  },
+
+  compatibilityDate: '2024-11-11'
 })
