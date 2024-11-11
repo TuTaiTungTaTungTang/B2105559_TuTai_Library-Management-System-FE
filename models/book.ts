@@ -1,4 +1,4 @@
-import type { Category } from "./categogy"
+import type { Category } from "./category"
 import type { Publisher } from "./publisher"
 
 export type Book = {
