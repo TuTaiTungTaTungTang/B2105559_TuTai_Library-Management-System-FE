@@ -18,5 +18,6 @@ export default function createHttp(resource: string = '') {
 			throw error.response?.data || error;
 		},
 	);
+
 	return http;
 }
