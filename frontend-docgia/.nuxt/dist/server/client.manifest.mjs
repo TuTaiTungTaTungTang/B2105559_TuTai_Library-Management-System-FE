@@ -1,0 +1,1 @@
+export { default } from "file:///D:/PTW/B2105559_TuTai_Library-Management-System-FE/frontend-docgia/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"
