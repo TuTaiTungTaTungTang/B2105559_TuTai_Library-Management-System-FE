@@ -21,6 +21,7 @@
     "vue-router": "^4.3.0",
     "vue-toast-notification": "^3.1.2",
     "vuetify-sonner": "^0.3.14",
+    
     "vuetify-toast-snackbar": "^0.6.1"
   },
   "devDependencies": {
