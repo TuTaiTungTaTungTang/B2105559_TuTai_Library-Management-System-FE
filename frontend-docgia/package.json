@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "deploy": "nuxt build && nuxt generate && nuxt prepare && PORT=3002 npm run preview"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",

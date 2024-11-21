@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify','ToastPlugin'],
   },
+  
 
   modules: [
     (_options, nuxt) => {

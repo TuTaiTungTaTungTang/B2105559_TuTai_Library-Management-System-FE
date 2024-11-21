@@ -73,8 +73,6 @@
                     <v-text-field v-model="newItem.TENSACH" label="Tên sách" required></v-text-field>
                     <VSelect v-model="newItem.THELOAI.TENTHELOAI" label="Thể loại" :items=listCategoryName required>
                     </VSelect>
-                    <VSelect v-model="newItem.THELOAI.TENTHELOAI" label="Thể loại" :items=listCategoryName required>
-                    </VSelect>
                     <v-text-field v-model="newItem.DONGIA" type="number" label="Đơn giá" required></v-text-field>
                     <v-text-field v-model="newItem.SOQUYEN" type="number" label="Số quyển" required></v-text-field>
                     <v-text-field v-model="newItem.NAMXUATBAN" type="number" label="Năm xuất bản"
@@ -273,32 +271,89 @@ export default defineComponent({
             this.dialog = false;
         },
 
-        async saveItem() {
-            const category = this.listCategory.find(category => category.TENTHELOAI === this.editedItem.THELOAI.TENTHELOAI);
-            const publisher = this.listPublisher.find(publisher => publisher.TENNXB === this.editedItem.NHAXUATBAN.TENNXB);
-            if (!this.tmpImage) {
-                console.log("1")
-                await bookService.updateBook(this.editedItem)
-            }
-            else {
-                console.log("2")
-                const file = await uploadService.uploadImage(this.tmpImage)
-                this.editedItem.HINHANH = file.filename;
-                await bookService.updateBook(this.editedItem)
-            }
-            // const res = await publisherService.updatePublisher(this.editedItem);
-            // // @ts-expect-error
-            // toast(res.message, {
-            //   cardProps: {
-            //     color: 'success',
-            //     class: 'my-toast',
-            //   },
-            //   prependIcon: 'mdi-check-circle-outline',
-            // })
-            this.items = await bookService.listAllBooks()
-            this.closeDialog();
-        },
+        // async saveItem() {
+        //     // 
+        //     try {
+        //         const category = this.listCategory.find(category => category.TENTHELOAI === this.editedItem.THELOAI.TENTHELOAI);
+        //         const publisher = this.listPublisher.find(publisher => publisher.TENNXB === this.editedItem.NHAXUATBAN.TENNXB);
 
+        //         if (!category || !publisher) {
+        //             alert("Thể loại hoặc nhà xuất bản không hợp lệ.");
+        //             return;
+        //         }
+
+        //         // Assign correct IDs to the editedItem
+        //         this.editedItem.THELOAI = category._id;
+        //         this.editedItem.NHAXUATBAN = publisher._id;
+
+        //         // Handle image upload if a new image is provided
+        //         if (this.tmpImage) {
+        //             const file = await uploadService.uploadImage(this.tmpImage);
+        //             this.editedItem.HINHANH = file.filename;
+        //         }
+
+        //         // Send updated book data to the backend
+        //         await bookService.updateBook(this.editedItem._id, this.editedItem);
+
+
+        //         // Refresh the list of books
+        //         this.items = await bookService.listAllBooks();
+
+        //         this.closeDialog(); // Close the dialog
+        //     } catch (error) {
+        //         console.error("Error updating book:", error);
+        //         alert("Có lỗi xảy ra khi cập nhật sách."+ error);
+        //     }
+        // },
+
+        async saveItem() {
+            try {
+                // Find category and publisher by name
+                const category = this.listCategory.find(category => category.TENTHELOAI === this.editedItem.THELOAI.TENTHELOAI);
+                const publisher = this.listPublisher.find(publisher => publisher.TENNXB === this.editedItem.NHAXUATBAN.TENNXB);
+
+                if (!category || !publisher) {
+                    alert("Thể loại hoặc nhà xuất bản không hợp lệ.");
+                    return;
+                }
+
+                // Assign correct IDs to the editedItem
+                this.editedItem.THELOAI = category._id;
+                this.editedItem.NHAXUATBAN = publisher._id;
+
+                // Prepare updated data
+                const updatedData = {
+                    TENSACH: this.editedItem.TENSACH,
+                    THELOAI: this.editedItem.THELOAI,
+                    DONGIA: this.editedItem.DONGIA,
+                    SOQUYEN: this.editedItem.SOQUYEN,
+                    NAMXUATBAN: this.editedItem.NAMXUATBAN,
+                    NHAXUATBAN: this.editedItem.NHAXUATBAN,
+                    TACGIA: this.editedItem.TACGIA,
+                    MOTA: this.editedItem.MOTA,
+                };
+
+                // Handle image upload if a new image is provided
+                if (this.tmpImage) {
+                    const file = await uploadService.uploadImage(this.tmpImage);
+                    updatedData.HINHANH = file.filename;
+                }
+
+                // Send updated book data to the backend
+                await bookService.updateBook(this.editedItem._id, updatedData);
+
+                // Refresh the book list
+                this.items = await bookService.listAllBooks();
+
+                // Close the dialog
+                this.closeDialog();
+                alert("Sách đã được cập nhật thành công.");
+            } catch (error) {
+                console.error("Error updating book:", error);
+                alert("Có lỗi xảy ra khi cập nhật sách: " + error.message);
+            }
+        },
+        
         openDeleteDialog(item: Publisher) {
             this.currentItem = item;
             this.deleteDialog = true;
