@@ -10,75 +10,88 @@
             </v-btn>
         </v-app-bar>
     </div>
-    <div>
-        <v-container>
-            <v-row>
-                <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="4">
-                    <v-card elevation="2" class="book-card">
-                        <v-img :src="`http://localhost:3000/statics/${item.HINHANH}`" class="book-image"></v-img>
-                        <v-card-text>
-                            <div class="book-title">{{ item.TENSACH }}</div>
-                            <div class="book-author"><strong>Tác giả:</strong> {{ item.TACGIA }}</div>
-                            <div class="book-category"><strong>Thể loại:</strong> {{ item.THELOAI.TENTHELOAI }}</div>
-                            <div class="book-price"><strong>Giá:</strong> {{ item.DONGIA.toLocaleString() }} VND</div>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn icon color="blue" @click="openDetailsDialog(item)">
-                                <v-icon>mdi-eye</v-icon>
-                            </v-btn>
-                            <v-btn icon color="green" @click="openBorrowDialog(item)">
-                                <v-icon>mdi-book-plus</v-icon>
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-col>
-            </v-row>
-            <!-- Pagination Controls -->
-            <v-pagination
-                v-if="filteredItems.length > itemsPerPage"
-                v-model="currentPage"
-                :length="pageCount"
-                class="mt-4"
-            ></v-pagination>
-        </v-container>
+    <!-- Thanh tìm kiếm -->
+    <v-container>
+        <v-row>
+            <v-col cols="12">
+                <v-text-field
+                    v-model="search"
+                    label="Tìm kiếm sách"
+                    variant="outlined"
+                    prepend-inner-icon="mdi-magnify"
+                    dense
+                    hide-details
+                ></v-text-field>
+            </v-col>
+        </v-row>
 
-        <!-- Details Dialog -->
-        <v-dialog v-model="detailsDialog" max-width="800px">
-            <v-card>
-                <v-card-title>Chi tiết sách</v-card-title>
-                <v-card-text>
-                    <v-img :src="`http://localhost:3000/statics/${currentItem.HINHANH}`" class="details-image"></v-img>
-                    <div>
-                        <p><strong>Tên sách:</strong> {{ currentItem.TENSACH }}</p>
-                        <p><strong>Tác giả:</strong> {{ currentItem.TACGIA }}</p>
-                        <p><strong>Thể loại:</strong> {{ currentItem.THELOAI.TENTHELOAI }}</p>
-                        <p><strong>Năm xuất bản:</strong> {{ currentItem.NAMXUATBAN }}</p>
-                        <p><strong>Nhà xuất bản:</strong> {{ currentItem.NHAXUATBAN.TENNXB }}</p>
-                        <p><strong>Mô tả:</strong> {{ currentItem.MOTA }}</p>
-                    </div>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn color="blue darken-1" text @click="detailsDialog = false">Đóng</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <!-- Danh sách sách -->
+        <v-row>
+            <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="4">
+                <v-card elevation="2" class="book-card">
+                    <v-img :src="`http://localhost:3000/statics/${item.HINHANH}`" class="book-image"></v-img>
+                    <v-card-text>
+                        <div class="book-title">{{ item.TENSACH }}</div>
+                        <div class="book-author"><strong>Tác giả:</strong> {{ item.TACGIA }}</div>
+                        <div class="book-category"><strong>Thể loại:</strong> {{ item.THELOAI.TENTHELOAI }}</div>
+                        <div class="book-price"><strong>Giá:</strong> {{ item.DONGIA.toLocaleString() }} VND</div>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn icon color="blue" @click="openDetailsDialog(item)">
+                            <v-icon>mdi-eye</v-icon>
+                        </v-btn>
+                        <v-btn icon color="green" @click="openBorrowDialog(item)">
+                            <v-icon>mdi-book-plus</v-icon>
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
 
-        <!-- Borrow Dialog -->
-        <v-dialog v-model="borrowDialog" max-width="500px">
-            <v-card>
-                <v-card-title>Xác nhận mượn sách</v-card-title>
-                <v-card-text>
-                    Bạn có muốn mượn quyển sách này không?
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn color="green darken-1" text @click="confirmBorrow()">Xác nhận</v-btn>
-                    <v-btn color="red darken-1" text @click="borrowDialog = false">Hủy</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-    </div>
+        <!-- Pagination Controls -->
+        <v-pagination
+            v-if="filteredItems.length > itemsPerPage"
+            v-model="currentPage"
+            :length="pageCount"
+            class="mt-4"
+        ></v-pagination>
+    </v-container>
+
+    <!-- Details Dialog -->
+    <v-dialog v-model="detailsDialog" max-width="800px">
+        <v-card>
+            <v-card-title>Chi tiết sách</v-card-title>
+            <v-card-text>
+                <v-img :src="`http://localhost:3000/statics/${currentItem.HINHANH}`" class="details-image"></v-img>
+                <div>
+                    <p><strong>Tên sách:</strong> {{ currentItem.TENSACH }}</p>
+                    <p><strong>Tác giả:</strong> {{ currentItem.TACGIA }}</p>
+                    <p><strong>Thể loại:</strong> {{ currentItem.THELOAI.TENTHELOAI }}</p>
+                    <p><strong>Năm xuất bản:</strong> {{ currentItem.NAMXUATBAN }}</p>
+                    <p><strong>Nhà xuất bản:</strong> {{ currentItem.NHAXUATBAN.TENNXB }}</p>
+                    <p><strong>Mô tả:</strong> {{ currentItem.MOTA }}</p>
+                </div>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn color="blue darken-1" text @click="detailsDialog = false">Đóng</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <!-- Borrow Dialog -->
+    <v-dialog v-model="borrowDialog" max-width="500px">
+        <v-card>
+            <v-card-title>Xác nhận mượn sách</v-card-title>
+            <v-card-text>
+                Bạn có muốn mượn quyển sách này không?
+            </v-card-text>
+            <v-card-actions>
+                <v-btn color="green darken-1" text @click="confirmBorrow()">Xác nhận</v-btn>
+                <v-btn color="red darken-1" text @click="borrowDialog = false">Hủy</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
-
 
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -87,12 +100,13 @@ import bookService from '~/services/book.service';
 import loanrecordService from '~/services/loanrecord.service';
 import authService from '~/services/auth.service';
 import tokenService from '~/services/token.service';
+import type { Member } from '~/models/member';
 
 export default defineComponent({
     data() {
         return {
-            search: '',
-            items: [] as Book[],
+            search: '', // Biến lưu giá trị tìm kiếm
+            items: [] as Book[], // Danh sách sách
             borrowDialog: false,
             detailsDialog: false,
             currentItem: null as any,
@@ -121,6 +135,12 @@ export default defineComponent({
         },
     },
     methods: {
+        logout() {
+            tokenService.removeAccessToken()
+            useRouter().push({
+                path: "/"
+            })
+        },
         openDetailsDialog(item: Book) {
             this.currentItem = item;
             this.detailsDialog = true;
