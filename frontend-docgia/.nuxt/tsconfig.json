@@ -115,7 +115,6 @@
     "skipLibCheck": true,
     "target": "ESNext",
     "allowJs": true,
-    "sourceMap": true,
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
@@ -130,12 +129,12 @@
       "ESNext",
       "dom",
       "dom.iterable",
-      "webworker" 
+      "webworker"
     ],
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "types": [],
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "useDefineForClassFields": true,
     "noImplicitThis": true,
     "allowSyntheticDefaultImports": true
@@ -155,7 +154,7 @@
   "exclude": [
     "../dist",
     "../node_modules",
-    "../../../node_modules",
+    "../../node_modules",
     "../node_modules/nuxt/node_modules",
     "../node_modules/@pinia/nuxt/runtime/server",
     "../node_modules/@pinia/nuxt/dist/runtime/server",

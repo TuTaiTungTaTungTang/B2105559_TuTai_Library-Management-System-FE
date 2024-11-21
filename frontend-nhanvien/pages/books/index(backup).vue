@@ -1,66 +1,66 @@
 <template>
     <div style="margin-bottom: 70px;">
-        <v-app-bar app color="teal darken-1" dark dense>
-            <VBtn style="font-weight: 400; font-size: large; margin: 0 10px;" :href="`/loanrecord`">QUẢN LÝ MƯỢN SÁCH
-            </VBtn>
-            <VBtn style="font-weight: 400; font-size: large; margin: 0 10px;" :href="`/books`">QUẢN LÝ SÁCH</VBtn>
-            <VBtn style="font-weight: 400; font-size: large; margin: 0 10px;" :href="`/category`">QUẢN LÝ THỂ LOẠI
-            </VBtn>
-            <VBtn style="font-weight: 400; font-size: large; margin: 0 10px;" :href="`/publisher`">QUẢN LÝ NHÀ XUẤT BẢN
-            </VBtn>
+        <v-app-bar app color="primary" dark>
+            <!-- <v-btn :href="`/books/listed`">Manage Books</v-btn> -->
+            <VBtn :href="`/loanrecord`">QUẢN LÝ MƯỢN SÁCH</VBtn>
+            <VBtn :href="`/books`">QUẢN LÝ SÁCH</VBtn>
+            <VBtn :href="`/category`">QUẢN LÝ THỂ LOẠI</VBtn>
+            <VBtn :href="`/publisher`">QUẢN LÝ NHÀ XUẤT BẢN</VBtn>
             <v-spacer></v-spacer>
-            <div style="margin-right: 20px; font-size: medium; font-weight: bold;">Xin chào: {{ currentUser.HOTENNV }}
-            </div>
-            <v-btn icon @click="logout" style="margin-right: 10px;">
+
+            <div style="margin-right: 20px;"> Xin chào: {{ currentUser.HOTENNV }}</div>
+
+            <v-btn icon @click="logout">
                 <v-icon>mdi-logout</v-icon>
             </v-btn>
+            <!-- <v-btn text @click="navigate('manage-categories')">Manage Categories</v-btn>
+              <v-btn text @click="navigate('manage-publishers')">Manage Publishers</v-btn> -->
         </v-app-bar>
     </div>
-
     <v-card flat>
         <v-card-title class="d-flex align-center pe-2">
-            <v-icon icon="mdi-book" style="color: #2b7a78;"></v-icon> &nbsp;
-            <span style="font-weight: bold; font-size: 20px; color: #37474f;">Quản lý sách</span>
+            <v-icon icon="mdi-book"></v-icon> &nbsp;
+            Quản lý sách
+        </v-card-title>
+        <v-card-title class="d-flex align-center pe-2">
+            <VBtn style="margin-left: 10px; margin-bottom: 10px;" color="primary" icon="mdi-plus" elevation="10"
+                @click="openCreateDialog"></VBtn>
             <v-spacer></v-spacer>
             <v-text-field v-model="search" density="compact" label="Tìm kiếm" prepend-inner-icon="mdi-magnify"
-                variant="solo-filled" flat hide-details single-line
-                style="max-width: 300px; margin-right: 10px;"></v-text-field>
-            <VBtn style="margin-left: 10px;" color="teal darken-2" icon="mdi-plus" elevation="8"
-                @click="openCreateDialog">
-                <v-icon color="white">mdi-plus</v-icon>
-            </VBtn>
+                variant="solo-filled" flat hide-details single-line></v-text-field>
         </v-card-title>
+
         <v-divider></v-divider>
-
-        <v-data-table :headers="headers" :items="filteredItems" hover class="elevation-2"
-            style="border-radius: 8px; overflow: hidden; background-color: #f9f9f9;">
+        <v-data-table :headers="headers" :items="filteredItems" hover="true">
             <template v-slot:item.index="{ index }">
-                <span style="font-weight: bold; color: teal;">{{ index + 1 }}</span>
+                <span>{{ index + 1 }}</span> <!-- Adding 1 because index starts at 0 -->
             </template>
-
             <template v-slot:item.HINHANH="{ item }">
-                <v-card elevation="1" rounded style="border: 1px solid #ddd;">
-                    <v-img :src="`http://localhost:3000/statics/${item.HINHANH}`" aspect-ratio="16/9"></v-img>
+                <v-card class="my-2" elevation="2" rounded>
+                    <v-img :src="`http://localhost:3000/statics/${item.HINHANH}`"
+                        style="object-fit: cover; display: block; width: 100%; height:50%;"></v-img>
                 </v-card>
+                <!-- <img :src="uploadService.getFileUrl(item.HINHANH)"
+                            style="object-fit: cover; display: block; width: 100%; height:90%;"></img> -->
             </template>
-
             <template v-slot:item.THELOAI="{ item }">
-                <div style="color: #2b7a78; font-weight: bold;">{{ item.THELOAI.TENTHELOAI }}</div>
+                <div>{{ item.THELOAI.TENTHELOAI }}</div>
+                <!-- <span>{{ index + 1 }}</span> -->
             </template>
-
             <template v-slot:item.NHAXUATBAN="{ item }">
-                <div style="color: #3d5af1;">{{ item.NHAXUATBAN.TENNXB }}</div>
+                <div>{{ item.NHAXUATBAN.TENNXB }}</div>
+                <!-- <span>{{ index + 1 }}</span> -->
+            </template>
+            <template v-slot:item.actions="{ item }">
+
+                <v-btn elevation="10" size="small" icon @click="openDialog(item)" style="margin-right: 8px;">
+                    <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn elevation="10" size="small" icon color="red" @click="openDeleteDialog(item)">
+                    <v-icon>mdi-delete</v-icon>
+                </v-btn>
             </template>
 
-            <template v-slot:item.actions="{ item }">
-                <v-btn elevation="8" size="small" color="blue darken-2" @click="openDialog(item)"
-                    style="margin-right: 8px;">
-                    <v-icon color="white">mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn elevation="8" size="small" color="red darken-2" @click="openDeleteDialog(item)">
-                    <v-icon color="white">mdi-delete</v-icon>
-                </v-btn>
-            </template>
         </v-data-table>
     </v-card>
     <v-dialog v-model="createDialog" max-width="600px">
@@ -135,6 +135,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+
 </template>
 
 <script lang="ts">
@@ -352,7 +353,7 @@ export default defineComponent({
                 alert("Có lỗi xảy ra khi cập nhật sách: " + error.message);
             }
         },
-
+        
         openDeleteDialog(item: Publisher) {
             this.currentItem = item;
             this.deleteDialog = true;
@@ -389,52 +390,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Bảng dữ liệu */
-.v-data-table {
-    border-radius: 10px;
-    background-color: #f9f9f9;
+:deep() .v-table .v-table__wrapper>table>thead>tr>th:not(:last-child) {
+    border-right: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 
-.v-data-table-header th {
-    font-size: 14px;
-    font-weight: 600;
-    color: #37474f;
-    text-align: center;
-    background-color: #e8f5e9;
-}
-
-/* Hover từng dòng */
-.v-data-table tbody tr:hover {
-    background-color: #e0f7fa;
-    cursor: pointer;
-}
-
-/* Thanh điều hướng */
-.v-app-bar {
-    font-family: "Roboto", sans-serif;
-    font-size: 16px;
-}
-
-/* Tiêu đề */
-.v-card-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #37474f;
-}
-
-/* Nút thao tác */
-.v-btn {
-    margin: 5px;
-    transition: background-color 0.2s ease;
-}
-
-.v-btn:hover {
-    background-color: #e0f7fa !important;
-}
-
-/* Chỉnh sửa hình ảnh */
-.v-img {
-    border-radius: 8px;
-    object-fit: cover;
+:deep() .v-table .v-table__wrapper>table>tbody>tr>td:not(:last-child),
+.v-table .v-table__wrapper>table>tbody>tr>th:not(:last-child) {
+    border-right: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 </style>

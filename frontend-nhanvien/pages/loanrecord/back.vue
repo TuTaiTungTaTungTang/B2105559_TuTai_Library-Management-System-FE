@@ -1,45 +1,37 @@
 <template>
     <div style="margin-bottom: 70px;">
-        <v-app-bar app color="teal darken-1" dark dense>
-            <VBtn style="font-weight: 500; font-size: large; margin: 0 10px;" :href="`/loanrecord`">QUẢN LÝ MƯỢN SÁCH</VBtn>
-            <VBtn style="font-weight: 500; font-size: large; margin: 0 10px;" :href="`/books`">QUẢN LÝ SÁCH</VBtn>
-            <VBtn style="font-weight: 500; font-size: large; margin: 0 10px;" :href="`/category`">QUẢN LÝ THỂ LOẠI</VBtn>
-            <VBtn style="font-weight: 500; font-size: large; margin: 0 10px;" :href="`/publisher`">QUẢN LÝ NHÀ XUẤT BẢN</VBtn>
+        <v-app-bar app color="primary" dark>
+            <!-- <v-btn :href="`/books/listed`">Manage Books</v-btn> -->
+            <VBtn :href="`/loanrecord`">QUẢN LÝ MƯỢN SÁCH</VBtn>
+            <VBtn :href="`/books`">QUẢN LÝ SÁCH</VBtn>
+            <VBtn :href="`/category`">QUẢN LÝ THỂ LOẠI</VBtn>
+            <VBtn :href="`/publisher`">QUẢN LÝ NHÀ XUẤT BẢN</VBtn>
             <v-spacer></v-spacer>
-            <div style="margin-right: 20px; font-size: medium; font-weight: bold;">Xin chào: {{ currentUser.HOTENNV }}</div>
-            <v-btn icon @click="logout" style="margin-right: 10px;">
+
+            <div style="margin-right: 20px;"> Xin chào: {{ currentUser.HOTENNV }}</div>
+
+            <v-btn icon @click="logout">
                 <v-icon>mdi-logout</v-icon>
             </v-btn>
+            <!-- <v-btn text @click="navigate('manage-categories')">Manage Categories</v-btn>
+              <v-btn text @click="navigate('manage-publishers')">Manage Publishers</v-btn> -->
         </v-app-bar>
     </div>
-
     <v-card flat>
-        <v-card-title class="d-flex align-center pe-2" style="padding-top: 16px; padding-bottom: 16px;">
-            <v-icon icon="mdi-note" color="teal darken-1" style="font-size: 28px;"></v-icon> &nbsp;
-            <span style="font-size: 20px; font-weight: bold; color: #37474f;">Quản lý phiếu mượn sách</span>
+        <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-note"></v-icon> &nbsp;
+            Quản lý phiếu mượn sách
+
             <v-spacer></v-spacer>
-            <v-text-field
-                v-model="search"
-                density="compact"
-                label="Tìm kiếm"
-                prepend-inner-icon="mdi-magnify"
-                outlined
-                flat
-                hide-details
-                style="max-width: 300px;"
-            ></v-text-field>
+            <v-text-field v-model="search" density="compact" label="Tìm kiếm" prepend-inner-icon="mdi-magnify"
+                variant="solo-filled" flat hide-details single-line></v-text-field>
         </v-card-title>
 
+
         <v-divider></v-divider>
-        <v-data-table
-            :headers="headers"
-            :items="filteredItems"
-            hover
-            class="elevation-2"
-            style="border-radius: 8px; overflow: hidden; background-color: #f9f9f9;"
-        >
+        <v-data-table :headers="headers" :items="filteredItems" hover="true">
             <template v-slot:item.index="{ index }">
-                <span style="font-weight: bold; color: teal;">{{ index + 1 }}</span>
+                <span>{{ index + 1 }}</span> <!-- Adding 1 because index starts at 0 -->
             </template>
 
             <template v-slot:item.DOCGIA="{ item }">
@@ -49,6 +41,7 @@
             </template>
             <template v-slot:item.SACH="{ item }">
                 <div>{{ item.SACH.TENSACH }}</div>
+                <!-- <span>{{ index + 1 }}</span> -->
             </template>
 
             <template v-slot:item.NGAYMUON="{ item }">
@@ -63,23 +56,19 @@
                     <v-chip
                         :color="(item.TRANGTHAI == 0) ? 'brown' : (item.TRANGTHAI == 1) ? '#8B8000' : (item.TRANGTHAI == 2 ? 'green' : 'red')"
                         :text="(item.TRANGTHAI == 0) ? 'Chờ lấy sách' : (item.TRANGTHAI == 1) ? 'Đang mượn' : (item.TRANGTHAI == 2 ? 'Đã trả' : 'Quá hạn')"
-                        class="text-uppercase" size="small" label
-                    ></v-chip>
+                        class="text-uppercase" size="small" label></v-chip>
                 </div>
             </template>
 
             <template v-slot:item.actions="{ item }">
-                <v-btn
-                    v-if="item.TRANGTHAI !== 2"
-                    elevation="10"
-                    size="small"
-                    icon
-                    @click="openDialog(item)"
-                    style="margin-right: 8px;"
-                    color="teal"
-                >
-                    <v-icon color="white">mdi-pencil</v-icon>
+
+                <v-btn v-if="item.TRANGTHAI !== 2" elevation="10" size="small" icon @click="openDialog(item)"
+                    style="margin-right: 8px;">
+                    <v-icon>mdi-pencil</v-icon>
                 </v-btn>
+                <!-- <v-btn elevation="10" size="small" icon color="red" @click="openDeleteDialog(item)">
+                    <v-icon>mdi-delete</v-icon>
+                </v-btn> -->
             </template>
         </v-data-table>
     </v-card>
@@ -87,20 +76,24 @@
     <v-dialog v-model="dialog" max-width="600px">
         <v-card>
             <v-card-title>
-                <span style="font-weight: bold; font-size: 18px;">Chỉnh sửa phiếu mượn</span>
+                Chỉnh sửa nhà xuất bản
             </v-card-title>
-            <v-divider></v-divider>
             <v-card-text>
                 <v-form>
-                    <v-select v-model="tmp_select" label="Trạng thái" :items="l" required></v-select>
+                    <VSelect v-model="tmp_select" label="Trạng thái" :items=l required>
+                    </VSelect>
+                    <!-- <v-text-field v-model="editedItem.TRANGTHAI" label="Mã nhà xuất bản"></v-text-field> -->
+                    <!-- <v-text-field v-model="editedItem.TENNXB" label="Tên nhà xuất bản"></v-text-field> -->
+                    <!-- <v-text-field v-model="editedItem.DIACHI" label="Địa chỉ"></v-text-field> -->
                 </v-form>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="red darken-1" text @click="closeDialog">Hủy</v-btn>
-                <v-btn color="green darken-2" text @click="saveItem">Lưu</v-btn>
+                <v-btn color="blue darken-1" text @click="closeDialog">Hủy</v-btn>
+                <v-btn color="blue darken-1" text @click="saveItem">Lưu</v-btn>
             </v-card-actions>
         </v-card>
+        <!-- <VSonner /> -->
     </v-dialog>
 </template>
 
@@ -221,58 +214,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Bố cục */
-.v-card-title {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
+:deep() .v-table .v-table__wrapper>table>thead>tr>th:not(:last-child) {
+    border-right: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 
-/* Tìm kiếm */
-.v-text-field {
-    max-width: 300px;
-}
-
-/* Nút thêm */
-.v-btn {
-    transition: background-color 0.2s ease;
-}
-
-.v-btn:hover {
-    background-color: #004d40 !important;
-}
-
-/* Dialog */
-.v-card-title {
-    font-family: "Roboto", sans-serif;
-    font-size: 20px;
-    font-weight: bold;
-    color: #37474f;
-}
-
-.v-card-text {
-    font-size: 16px;
-    color: #455a64;
-}
-
-/* Bảng */
-.v-data-table {
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    overflow: hidden;
-}
-
-.v-data-table-header th {
-    font-size: 14px;
-    font-weight: 600;
-    color: #37474f;
-    text-align: center;
-    background-color: #e8f5e9;
-}
-
-/* Hover từng dòng */
-.v-data-table tbody tr:hover {
-    background-color: #e0f7fa !important;
-    cursor: pointer;
+:deep() .v-table .v-table__wrapper>table>tbody>tr>td:not(:last-child),
+.v-table .v-table__wrapper>table>tbody>tr>th:not(:last-child) {
+    border-right: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 </style>

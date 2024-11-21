@@ -31,7 +31,8 @@
                 <v-card elevation="2" class="book-card">
                     <v-img :src="`http://localhost:3000/statics/${item.HINHANH}`" class="book-image"></v-img>
                     <v-card-text>
-                        <div class="book-title">{{ item.TENSACH }}</div>
+                        <div class="book-title"><strong>{{ item.TENSACH }}</strong></div>
+                        <v-spacer></v-spacer>
                         <div class="book-author"><strong>Tác giả:</strong> {{ item.TACGIA }}</div>
                         <div class="book-category"><strong>Thể loại:</strong> {{ item.THELOAI.TENTHELOAI }}</div>
                         <div class="book-price"><strong>Giá:</strong> {{ item.DONGIA.toLocaleString() }} VND</div>
@@ -63,6 +64,8 @@
             <v-card-title>Chi tiết sách</v-card-title>
             <v-card-text>
                 <v-img :src="`http://localhost:3000/statics/${currentItem.HINHANH}`" class="details-image"></v-img>
+                <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
                 <div>
                     <p><strong>Tên sách:</strong> {{ currentItem.TENSACH }}</p>
                     <p><strong>Tác giả:</strong> {{ currentItem.TACGIA }}</p>
@@ -171,48 +174,54 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.book-card {
-    margin: 10px 0;
-    border-radius: 8px;
+/* Định dạng bảng */
+.v-data-table {
+    border-radius: 10px;
+    background-color: #f9f9f9;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.book-image {
-    height: 300px;
-    object-fit: cover;
+.v-data-table-header th {
+    font-size: 14px;
+    font-weight: 600;
+    color: #37474f;
+    text-align: center;
+    background-color: #e8f5e9;
 }
 
-.book-title {
-    font-size: 18px;
+/* Hover từng dòng */
+.v-data-table tbody tr:hover {
+    background-color: #e0f7fa !important;
+    cursor: pointer;
+}
+
+/* Nút */
+.v-btn {
+    transition: background-color 0.2s ease;
+    margin: 5px;
+}
+
+.v-btn:hover {
+    background-color: #e0f7fa !important;
+}
+
+/* Dialog */
+.v-card-title {
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
     font-weight: bold;
-    margin-bottom: 8px;
     color: #37474f;
 }
 
-.book-author,
-.book-category,
-.book-price {
-    font-size: 14px;
-    margin-bottom: 4px;
-    color: #546e7a;
+.v-card-text {
+    font-size: 16px;
+    color: #455a64;
 }
-
-.v-pagination {
-    justify-content: center;
-}
-
-.details-image {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 20px;
-}
-
-.v-card-actions {
-    justify-content: center;
-}
-
-.v-btn {
-    margin: 0 5px;
+.book-title {
+    font-size: 18px; /* Adjust the font size as needed */
+    font-weight: bold;
+    text-align: center; /* Center the text */
+    color: #2b7a78; /* Optional: Change the color to match the theme */
+    margin-bottom: 8px; /* Optional: Add spacing below the title */
 }
 </style>

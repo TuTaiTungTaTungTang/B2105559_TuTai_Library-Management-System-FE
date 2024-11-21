@@ -5,7 +5,7 @@
     "noEmit": true,
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "allowJs": true,
     "resolveJsonModule": true,
     "jsx": "preserve",
@@ -131,7 +131,7 @@
   ],
   "exclude": [
     "../node_modules",
-    "../../../node_modules",
+    "../../node_modules",
     "../node_modules/nuxt/node_modules",
     "../dist"
   ]
