@@ -1,19 +1,11 @@
 <template>
     <div style="margin-bottom: 70px;">
-        <v-app-bar app color="primary" dark>
-            <!-- <v-btn :href="`/books/listed`">Manage Books</v-btn> -->
-            <VBtn style="font-weight: 300; font-size: large;" :href="`/books`">SÁCH</VBtn>
-            <VBtn style="font-weight: 300; font-size: large;" :href="`/loanrecord`">PHIẾU MƯỢN SÁCH</VBtn>
-            <!-- <v-btn text @click="navigate('manage-categories')">Manage Categories</v-btn>
-              <v-btn text @click="navigate('manage-publishers')">Manage Publishers</v-btn> -->
-            <!-- Spacer to push content to the right -->
+        <v-app-bar app color="teal darken-1" dark dense>
+            <VBtn style="font-weight: 400; font-size: large; margin: 0 10px;" :href="`/books`">SÁCH</VBtn>
+            <VBtn style="font-weight: 400; font-size: large; margin: 0 10px;" :href="`/loanrecord`">PHIẾU MƯỢN SÁCH</VBtn>
             <v-spacer></v-spacer>
-
-            <!-- Displaying the user's name -->
-            <div style="margin-right: 20px;"> Xin chào: {{ currentUser.TEN }}</div>
-
-            <!-- Logout Button -->
-            <v-btn icon @click="logout">
+            <div style="margin-right: 20px; font-size: medium; font-weight: bold;">Xin chào: {{ currentUser.TEN }}</div>
+            <v-btn icon @click="logout" style="margin-right: 10px;">
                 <v-icon>mdi-logout</v-icon>
             </v-btn>
         </v-app-bar>
@@ -152,12 +144,95 @@ export default defineComponent({
 </script>
 
 <style scoped>
-:deep() .v-table .v-table__wrapper>table>thead>tr>th:not(:last-child) {
-    border-right: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+/* Tổng quan */
+v-card {
+    border-radius: 12px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-:deep() .v-table .v-table__wrapper>table>tbody>tr>td:not(:last-child),
-.v-table .v-table__wrapper>table>tbody>tr>th:not(:last-child) {
-    border-right: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+/* Phần bảng */
+.v-data-table {
+    background-color: #f9f9f9;
+    border-radius: 8px;
 }
+
+.v-data-table thead {
+    background-color: #4caf50;
+    color: white;
+    font-weight: bold;
+}
+
+.v-data-table tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+.v-data-table tbody tr:hover {
+    background-color: #e8f5e9;
+}
+
+/* Phần chip trạng thái */
+.v-chip {
+    font-size: 0.9em;
+    text-transform: capitalize;
+    color: white;
+}
+
+.v-chip.brown {
+    background-color: #795548;
+}
+
+.v-chip.green {
+    background-color: #388e3c;
+}
+
+.v-chip.yellow {
+    background-color: #fbc02d;
+}
+
+.v-chip.red {
+    background-color: #d32f2f;
+}
+
+/* Thanh tìm kiếm */
+.v-text-field {
+    max-width: 300px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề */
+.v-card-title {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #4caf50;
+    margin-bottom: 10px;
+}
+
+/* App bar */
+.v-app-bar {
+    background-color: #4caf50;
+}
+
+.v-btn {
+    font-size: 1em;
+    margin: 0 8px;
+    color: white;
+    text-transform: none;
+}
+
+.v-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Spacer chỉnh cân đối */
+.v-spacer {
+    flex-grow: 1;
+}
+
+/* Phần padding */
+.v-card {
+    padding: 16px;
+}
+
 </style>
